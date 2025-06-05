@@ -1,13 +1,17 @@
 ---
-title: "graded exercise 3 statsoft"
+title: "Graded Exercise 3"
 author: "Frieda Krois"
 date: "2025-06-05"
 output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
 ## Exercise 1: Initializing git (4 Points)
 
 For this whole exercise sheet we will be tracking all our changes to it
@@ -29,23 +33,20 @@ c)  For all of the following tasks in this exercise sheet we ask you to
 
 d)  Name 2 strengths and 2 weaknesses of git. (Don't forget to create a
     commit after this answer, see *1c*)
-    
-    
-    ## Strengths and weaknesses of git
 
-strenghts:
+***Strengths and weaknesses of git***
+
+**strenghts:**
 
 -   convenient and fast for collaboration
 
 -   version control makes it almost impossible to lose files
 
-weeknesses:
+**weeknesses:**
 
 -   can be tricky to use (especially in the beginning)
 
 -   requires explicit use (does not work in the background)
-
-
 
 e)  Knit this exercise sheet. Some new files will automatically be
     generated when knitting the sheet e.g. the HTML page. Ignore these
@@ -60,7 +61,7 @@ For this task you will upload your solution to GitHub.
 a)  Create a new repository on GitHub in your account named
     `exeRcise-sheet-3`. Make sure you create a **public repository** so
     we are able to see it for grading. Add the link to the repository
-    below:git@github.com:Friedikr/exeRcise-sheet-3.git
+    below:
 b)  Push your code to this new repository by copying and executing the
     snippet on github listed under
     `…or push an existing repository from the command line`.
@@ -81,8 +82,33 @@ a)  Load the `pixar_films` dataset into R. Clean the dataset by removing
     films without a title. Inspect the variable `film_rating`. What are
     the possible values and what do they mean? Create a factor variable
     for the film rating. Why is this appropriate?
+```{r} 
+# load library
+library(tidyverse)
+```
+    
+```{r}
+# load data
+films <- read_csv("data/pixar_films.csv")
+head(films)
+```
 
-<!-- -->
+```{r}
+# clean dataframe 
+films_clean <- films %>%
+  filter(!is.na(film), film != "")
+```
+
+```{r}
+# change variable film rating to factor 
+films_clean$film_rating <- factor(
+  films_clean$film_rating,
+  levels = c("G", "PG"),
+  ordered = TRUE
+)
+```
+possible values are G (Rated G: General audiences - all ages admitted), PG (arental guidance suggested – Some material may not be suitable for children) and not rated. In addition we have three N/A's (missing/ unspecified values). A factor variable is appropriate because a factor is ideal for categorical data — like film ratings — especially when values are from a known, limited set and may have a natural order which is the case here: film_rating represents categories not numeric quantities and we have a fixed set of possible values (here I just take "interesting values" "G" and "PG" into account).
+
 
 b)  Inspect the film titles manually. Which films form a film series? A
     film series can be identified by a common word in the titles of the
@@ -143,4 +169,3 @@ f)  Create a meaningful plot / figure with the dataset. Make sure to
 
 Make sure to push all your commits and changes to GitHub before
 submitting the exercise sheet.
-
