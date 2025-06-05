@@ -85,6 +85,7 @@ a)  Load the `pixar_films` dataset into R. Clean the dataset by removing
 ```{r} 
 # load library
 library(tidyverse)
+library(dplyr)
 ```
     
 ```{r}
@@ -116,6 +117,37 @@ b)  Inspect the film titles manually. Which films form a film series? A
     e.g. "Despicable Me" and "Despicable Me 2". Create a dataframe which
     displays a list of the different series with the titles of the films
     and how many films belong to the series. Output the dataframe.
+```{r}
+library(dplyr)
+library(stringr)
+
+# Funktion: Erster sinnvoller Begriff im Titel (außer "The", "A", ...)
+get_series_name <- function(title) {
+  words <- str_split(tolower(title), "\\s+")[[1]]
+  words <- words[!words %in% c("the", "a", "and", "of", "in", "to")]
+  words <- words[!str_detect(words, "^[0-9]+$")]
+  if (length(words) > 0) return(str_to_title(words[1]))
+  return(NA)
+}
+
+# Wende Funktion auf saubere Titelliste an
+films_series_summary <- films_clean %>%
+  mutate(series_name = sapply(film, get_series_name)) %>%
+  filter(!is.na(series_name)) %>%
+  group_by(series_name) %>%
+  filter(n() > 1) %>%
+  summarise(
+    film_titles = paste0("[", paste0("'", film, "'", collapse = ", "), "]"),
+    film_count = n(),
+    .groups = "drop"
+  ) %>%
+  arrange(desc(film_count))
+
+# Ausgabe
+print(films_series_summary, row.names = FALSE)
+```
+
+
 
 c)  Load the `public_response` dataframe into R. Convert the
     `cinema_score` variable into a factor while ensuring the factor
