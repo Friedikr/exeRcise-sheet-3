@@ -85,7 +85,6 @@ a)  Load the `pixar_films` dataset into R. Clean the dataset by removing
 ```{r} 
 # load library
 library(tidyverse)
-library(dplyr)
 ```
     
 ```{r}
@@ -148,12 +147,34 @@ print(films_series_summary, row.names = FALSE)
 ```
 
 
-
 c)  Load the `public_response` dataframe into R. Convert the
     `cinema_score` variable into a factor while ensuring the factor
     levels are defined in ascending order, from the lowest to the
     highest score. Combine `public_response` with the `pixar_films`
     dataset using an appropriate merge variable.
+    
+```{r}
+public_response <- read_csv("data/public_response.csv")
+head(public_response)
+```
+
+
+```{r}
+# cinema_score in geordneten Faktor umwandeln mit Levels A- < A < A+
+levels_ordered <- c("A-", "A", "A+")
+
+public_response$cinema_score <- factor(public_response$cinema_score, 
+                                      levels = levels_ordered, 
+                                      ordered = TRUE)
+
+
+
+#  Merge der beiden Datensätze über die Spalte "film"
+combined_data <- merge(films_clean, public_response, by = "film", all = TRUE)
+
+head(combined_data)
+```
+
 
 d)  Choose one of the variables representing the public response and
     create a bar plot for the films belonging to a series. Here are the
@@ -166,9 +187,31 @@ d)  Choose one of the variables representing the public response and
         Order the bars within a series according to the release date of
         the films.
     -   A title and axis labels for context.
+```{r}
+ggplot(combined_data, aes(x = factor(release_order), y = rotten_tomatoes)) +
+  geom_bar(stat = "identity", fill = "steelblue", width = 0.6) +
+  geom_text(aes(label = film), vjust = -0.5, size = 2.8, angle = 45, hjust = 0) +
+  facet_wrap(~ series_name, scales = "free_x") +
+  labs(
+    title = "Rotten Tomatoes Scores by Pixar Film Series",
+    x = "Release Order",
+    y = "Rotten Tomatoes Score (%)"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 0, hjust = 0.5),
+    strip.text = element_text(face = "bold", size = 12),
+    plot.margin = margin(t = 10, r = 10, b = 40, l = 10)  # mehr Platz unten
+  ) +
+  ylim(0, 105) +
+  coord_cartesian(clip = "off")
+
+```
 
     What do you notice when comparing the scores of the films in a
     series? Do you see any patterns?
+    
+I notice that in all four series the first film got the highest scores. The following films of the series could not beat the popularity score of the debut film.
 
 ## Exercise 4: Open Analysis (4 points)
 
