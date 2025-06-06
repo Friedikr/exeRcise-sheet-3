@@ -3,7 +3,7 @@ title: "Graded Exercise 3"
 author: "Frieda Krois"
 date: "2025-06-05"
 output: html_document
-   fig_caption: true
+fig_caption: true
 editor_options: 
   markdown: 
     wrap: 72
@@ -55,6 +55,8 @@ e)  Knit this exercise sheet. Some new files will automatically be
     can, but don't need to create a `.gitignore` file. Just do not
     commit these files manually.
 
+
+
 ## Exercise 2: Putting your Repository on GitHub (3 Points)
 
 For this task you will upload your solution to GitHub.
@@ -62,12 +64,14 @@ For this task you will upload your solution to GitHub.
 a)  Create a new repository on GitHub in your account named
     `exeRcise-sheet-3`. Make sure you create a **public repository** so
     we are able to see it for grading. Add the link to the repository
-    below:
+    below: >https://github.com/Friedikr/exeRcise-sheet-3<
 b)  Push your code to this new repository by copying and executing the
     snippet on github listed under
     `…or push an existing repository from the command line`.
 c)  Regularly push your latest changes to GitHub again and especially do
     so when you are finished with this sheet.
+
+
 
 ## Exercise 3: Pixar Films (4 Points)
 
@@ -108,7 +112,8 @@ films_clean$film_rating <- factor(
   ordered = TRUE
 )
 ```
-possible values are G (Rated G: General audiences - all ages admitted), PG (arental guidance suggested – Some material may not be suitable for children) and not rated. In addition we have three N/A's (missing/ unspecified values). A factor variable is appropriate because a factor is ideal for categorical data — like film ratings — especially when values are from a known, limited set and may have a natural order which is the case here: film_rating represents categories not numeric quantities and we have a fixed set of possible values (here I just take "interesting values" "G" and "PG" into account).
+
+The possible values are G (Rated G: General audiences - all ages admitted), PG (arental guidance suggested – Some material may not be suitable for children) and not rated. In addition we have three N/A's (missing/ unspecified values). A factor variable is appropriate because a factor is ideal for categorical data — like film ratings — especially when values are from a known, limited set and may have a natural order which is the case here: film_rating represents categories not numeric quantities and we have a fixed set of possible values (here I just take "interesting values" "G" and "PG" into account).
 
 
 b)  Inspect the film titles manually. Which films form a film series? A
@@ -157,8 +162,6 @@ c)  Load the `public_response` dataframe into R. Convert the
 public_response <- read_csv("data/public_response.csv")
 head(public_response)
 ```
-
-
 ```{r}
 # cinema_score in geordneten Faktor umwandeln mit Levels A- < A < A+
 levels_ordered <- c("A-", "A", "A+")
@@ -187,6 +190,9 @@ d)  Choose one of the variables representing the public response and
         Order the bars within a series according to the release date of
         the films.
     -   A title and axis labels for context.
+    
+    What do you notice when comparing the scores of the films in a
+    series? Do you see any patterns?
 ```{r}
 get_series_name <- function(title) {
   words <- str_split(tolower(title), "\\s+")[[1]]
@@ -247,10 +253,6 @@ ggplot(combined_data, aes(x = factor(release_order), y = rotten_tomatoes)) +
   coord_cartesian(clip = "off")
 
 ```
-
-
-    What do you notice when comparing the scores of the films in a
-    series? Do you see any patterns?
     
 I notice that in all four series the first film got the highest scores. The following films of the series could not beat the popularity score of the debut film. Especially in Cars there is a big difference between film 1 and 2.
 
@@ -265,10 +267,11 @@ determining the research question yourself.
 a)  Go to <https://github.com/owid/owid-datasets/tree/master/datasets>
     and choose a dataset that interests you. You can have a look at
     <https://ourworldindata.org/> to gather some inspiration.
+    
 b)  Download the dataset and track it in git.
 ```{r}
 data <- read_csv("data/Missing_women_estimates.csv")
-head(missing_women)
+head(data)
 ```
 
 c)  Put the name / title of the dataset and a link to it below.
@@ -286,7 +289,6 @@ Research topic: The term "missing women" indicates a shortfall in the number of 
 Research question: "What role do China and India play in the global pattern of gender-based demographic inequality, as reflected in the distribution of missing women?"
 
 
-    
 e)  Use R to answer your chosen question. Please limit your analysis to
     the functions and techniques we have covered so far in the course.
     You are **not expected** to use advanced statistical models or
@@ -323,14 +325,14 @@ f)  Create a meaningful plot / figure with the dataset. Make sure to
     provide a figure caption (via the chunk options / Rmarkdown) and
     correctly label the figure.
     
-```{r}
+```{r china-india-share, fig.cap="Proportion of missing women from China and India in the global total", fig.align='center'}
+# (Hier kommt dein Plot-Code)
 ggplot(share_long, aes(x = Year, y = Share, color = Country)) +
   geom_line(size = 1.2) +
   geom_point(size = 2) +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
   scale_color_manual(values = c("firebrick", "darkgreen")) +
   labs(
-    title = "Proportion of missing women from China and India in the global total",
     x = "Jahr",
     y = "Anteil an der Welt insgesamt (%)",
     color = "Land"
