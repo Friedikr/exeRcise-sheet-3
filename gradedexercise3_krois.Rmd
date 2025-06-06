@@ -188,6 +188,46 @@ d)  Choose one of the variables representing the public response and
         the films.
     -   A title and axis labels for context.
 ```{r}
+get_series_name <- function(title) {
+  words <- str_split(tolower(title), "\\s+")[[1]]
+  words <- words[!words %in% c("the", "a", "and", "of", "in", "to")]
+  words <- words[!str_detect(words, "^[0-9]+$")]
+  if (length(words) > 0) return(str_to_title(words[1]))
+  return(NA)
+}
+
+# Step 2: Add series_name column
+combined_data <- combined_data %>%
+  mutate(series_name = sapply(film, get_series_name))
+
+# Step 3: Keep only series with more than one film
+combined_data <- combined_data %>%
+  group_by(series_name) %>%
+  filter(n() > 1) %>%
+  ungroup()
+
+# Step 4: Add release order manually (adjust if needed)
+combined_data <- combined_data %>%
+  mutate(release_order = case_when(
+    film == "Toy Story" ~ 1,
+    film == "Toy Story 2" ~ 2,
+    film == "Toy Story 3" ~ 3,
+    film == "Toy Story 4" ~ 4,
+    film == "Cars" ~ 1,
+    film == "Cars 2" ~ 2,
+    film == "Cars 3" ~ 3,
+    film == "The Incredibles" ~ 1,
+    film == "Incredibles 2" ~ 2,
+    film == "Monsters, Inc." ~ 1,
+    film == "Monsters University" ~ 2,
+    film == "Finding Nemo" ~ 1,
+    film == "Finding Dory" ~ 2,
+    TRUE ~ NA_real_
+  )) %>%
+  filter(!is.na(release_order))
+```
+    
+```{r}
 ggplot(combined_data, aes(x = factor(release_order), y = rotten_tomatoes)) +
   geom_bar(stat = "identity", fill = "steelblue", width = 0.6) +
   geom_text(aes(label = film), vjust = -0.5, size = 2.8, angle = 45, hjust = 0) +
@@ -208,10 +248,13 @@ ggplot(combined_data, aes(x = factor(release_order), y = rotten_tomatoes)) +
 
 ```
 
+
     What do you notice when comparing the scores of the films in a
     series? Do you see any patterns?
     
 I notice that in all four series the first film got the highest scores. The following films of the series could not beat the popularity score of the debut film. Especially in Cars there is a big difference between film 1 and 2.
+
+
 
 ## Exercise 4: Open Analysis (4 points)
 
@@ -239,7 +282,7 @@ d)  Come up with a (research) question you want to answer with the data
     with the dataset and using R.
     
 Research topic: The term "missing women" indicates a shortfall in the number of women relative to the expected number of women in a region or country. It is most often measured through male-to-female sex ratios, and is theorized to be caused by sex-selective abortions, female infanticide, and inadequate healthcare and nutrition for female children. Due to that matter I want to reseach the role of China and India when it comes to missing women worldwide. 
-Research question: 
+Research question:
     
     
 e)  Use R to answer your chosen question. Please limit your analysis to
