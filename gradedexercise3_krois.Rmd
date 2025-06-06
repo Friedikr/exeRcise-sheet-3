@@ -251,7 +251,6 @@ ggplot(combined_data, aes(x = factor(release_order), y = rotten_tomatoes)) +
   ) +
   ylim(0, 105) +
   coord_cartesian(clip = "off")
-
 ```
     
 I notice that in all four series the first film got the highest scores. The following films of the series could not beat the popularity score of the debut film. Especially in Cars there is a big difference between film 1 and 2.
