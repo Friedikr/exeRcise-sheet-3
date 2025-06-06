@@ -229,8 +229,8 @@ head(missing_women)
 
 c)  Put the name / title of the dataset and a link to it below.
 
--   Dataset Name: ...
--   Link: <https://github.com/owid/owid-datasets/>...
+-   Dataset Name: Missing women estimates (Bongaarts & Guilmoto, 2015)
+-   Link: <https://github.com/owid/owid-datasets/tree/master/datasets/Missing%20women%20estimates%20(Bongaarts%20%26%20Guilmoto%2C%202015)>
 
 d)  Come up with a (research) question you want to answer with the data
     and briefly explain why you believe this is an interesting question
