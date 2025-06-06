@@ -281,9 +281,11 @@ d)  Come up with a (research) question you want to answer with the data
     within one sentence. It should be a question that can be answered
     with the dataset and using R.
     
-Research topic: The term "missing women" indicates a shortfall in the number of women relative to the expected number of women in a region or country. It is most often measured through male-to-female sex ratios, and is theorized to be caused by sex-selective abortions, female infanticide, and inadequate healthcare and nutrition for female children. Due to that matter I want to reseach the role of China and India when it comes to missing women worldwide. 
-Research question:
-    
+Research topic: The term "missing women" indicates a shortfall in the number of women relative to the expected number of women in a region or country. Missing female births and excess female mortality are calculated based on the difference between observed and expected sex ratios. It is theorized to be caused by sex-selective abortions, female infanticide, and inadequate healthcare and nutrition for female children. Due to that matter I want to reseach the role of China and India when it comes to missing women worldwide. The dataset gives data for China, Indi, World and Rest of the World from 1970 to today in five-year intervals, with projections through to 2050.
+
+Research question: "What role do China and India play in the global pattern of gender-based demographic inequality, as reflected in the distribution of missing women?"
+
+
     
 e)  Use R to answer your chosen question. Please limit your analysis to
     the functions and techniques we have covered so far in the course.
@@ -302,7 +304,8 @@ data_wide <- data_filtered %>%
 data_wide <- data_wide %>%
   mutate(
     China_Share = China / World,
-    India_Share = India / World
+    India_Share = India / World,
+ 
   )
 
 share_long <- data_wide %>%
@@ -311,7 +314,8 @@ share_long <- data_wide %>%
                names_to = "Country", values_to = "Share") %>%
   mutate(Country = recode(Country,
                           "China_Share" = "China",
-                          "India_Share" = "India"))
+                          "India_Share" = "India",
+                        ))
 ```
 
     
@@ -319,14 +323,18 @@ f)  Create a meaningful plot / figure with the dataset. Make sure to
     provide a figure caption (via the chunk options / Rmarkdown) and
     correctly label the figure.
     
-```{r china-india-share, fig.cap="Anteil der fehlenden Frauen aus China und Indien an der weltweiten Gesamtzahl (1970–2015)", fig.align='center'}
-
+```{r}
 ggplot(share_long, aes(x = Year, y = Share, color = Country)) +
   geom_line(size = 1.2) +
   geom_point(size = 2) +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
   scale_color_manual(values = c("firebrick", "darkgreen")) +
-  labs(x = "Jahr", y = "Anteil an Welt insgesamt (%)", color = "Land") +
+  labs(
+    title = "Proportion of missing women from China and India in the global total",
+    x = "Jahr",
+    y = "Anteil an der Welt insgesamt (%)",
+    color = "Land"
+  ) +
   theme_minimal(base_size = 14)
 ```
     
