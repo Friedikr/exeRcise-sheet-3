@@ -142,7 +142,6 @@ films_series_summary <- films_clean %>%
   ) %>%
   arrange(desc(film_count))
 
-# Ausgabe
 print(films_series_summary, row.names = FALSE)
 ```
 
@@ -211,7 +210,7 @@ ggplot(combined_data, aes(x = factor(release_order), y = rotten_tomatoes)) +
     What do you notice when comparing the scores of the films in a
     series? Do you see any patterns?
     
-I notice that in all four series the first film got the highest scores. The following films of the series could not beat the popularity score of the debut film.
+I notice that in all four series the first film got the highest scores. The following films of the series could not beat the popularity score of the debut film. Especially in Cars there is a big difference between film 1 and 2.
 
 ## Exercise 4: Open Analysis (4 points)
 
@@ -223,6 +222,11 @@ a)  Go to <https://github.com/owid/owid-datasets/tree/master/datasets>
     and choose a dataset that interests you. You can have a look at
     <https://ourworldindata.org/> to gather some inspiration.
 b)  Download the dataset and track it in git.
+```{r}
+missing_women <- read_csv("data/Missing_women_estimates.csv")
+head(missing_women)
+```
+
 c)  Put the name / title of the dataset and a link to it below.
 
 -   Dataset Name: ...
