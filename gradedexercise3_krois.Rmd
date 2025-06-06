@@ -3,6 +3,7 @@ title: "Graded Exercise 3"
 author: "Frieda Krois"
 date: "2025-06-05"
 output: html_document
+   fig_caption: true
 editor_options: 
   markdown: 
     wrap: 72
@@ -223,7 +224,7 @@ a)  Go to <https://github.com/owid/owid-datasets/tree/master/datasets>
     <https://ourworldindata.org/> to gather some inspiration.
 b)  Download the dataset and track it in git.
 ```{r}
-missing_women <- read_csv("data/Missing_women_estimates.csv")
+data <- read_csv("data/Missing_women_estimates.csv")
 head(missing_women)
 ```
 
@@ -236,14 +237,56 @@ d)  Come up with a (research) question you want to answer with the data
     and briefly explain why you believe this is an interesting question
     within one sentence. It should be a question that can be answered
     with the dataset and using R.
+    
+Research topic: The term "missing women" indicates a shortfall in the number of women relative to the expected number of women in a region or country. It is most often measured through male-to-female sex ratios, and is theorized to be caused by sex-selective abortions, female infanticide, and inadequate healthcare and nutrition for female children. Due to that matter I want to reseach the role of China and India when it comes to missing women worldwide. 
+Research question: 
+    
+    
 e)  Use R to answer your chosen question. Please limit your analysis to
     the functions and techniques we have covered so far in the course.
     You are **not expected** to use advanced statistical models or
     external packages which haven't been introduced.
+```{r}
+colnames(data) <- c("Country", "Year", "Missing_Females", "Excess_Deaths", "Missing_Births")
+
+# data wrangling
+data_filtered <- data %>%
+  select(Country, Year, Missing_Females)
+
+data_wide <- data_filtered %>%
+  pivot_wider(names_from = Country, values_from = Missing_Females)
+
+data_wide <- data_wide %>%
+  mutate(
+    China_Share = China / World,
+    India_Share = India / World
+  )
+
+share_long <- data_wide %>%
+  select(Year, China_Share, India_Share) %>%
+  pivot_longer(cols = c(China_Share, India_Share),
+               names_to = "Country", values_to = "Share") %>%
+  mutate(Country = recode(Country,
+                          "China_Share" = "China",
+                          "India_Share" = "India"))
+```
+
+    
 f)  Create a meaningful plot / figure with the dataset. Make sure to
     provide a figure caption (via the chunk options / Rmarkdown) and
     correctly label the figure.
+    
+```{r china-india-share, fig.cap="Anteil der fehlenden Frauen aus China und Indien an der weltweiten Gesamtzahl (1970–2015)", fig.align='center'}
 
+ggplot(share_long, aes(x = Year, y = Share, color = Country)) +
+  geom_line(size = 1.2) +
+  geom_point(size = 2) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  scale_color_manual(values = c("firebrick", "darkgreen")) +
+  labs(x = "Jahr", y = "Anteil an Welt insgesamt (%)", color = "Land") +
+  theme_minimal(base_size = 14)
+```
+    
 ## Final Note
 
 Make sure to push all your commits and changes to GitHub before
